@@ -112,7 +112,7 @@ async def run_subprocess(cmd: list[str], prefix: str) -> int:
 # ============================================================================
 
 
-async def build_image(image: str) -> bool:
+async def build_image(image: str, *, no_cache: bool = False) -> bool:
     """Build a single Docker image via ``docker build -t <image> -f Dockerfile.hud .``.
 
     If CODING_GITHUB_TOKEN is set in the environment, it is passed as a Docker
@@ -120,6 +120,8 @@ async def build_image(image: str) -> bool:
     """
     logger.info(f"Building image: {image}")
     cmd = ["docker", "build", "-t", image, "-f", "Dockerfile.hud"]
+    if no_cache:
+        cmd.append("--no-cache")
     if os.environ.get("CODING_GITHUB_TOKEN"):
         cmd += ["--secret", "id=CODING_GITHUB_TOKEN,env=CODING_GITHUB_TOKEN"]
     cmd.append(".")
@@ -389,7 +391,7 @@ async def async_main(args: argparse.Namespace) -> int:
 
     # --- Build ---
     if args.build:
-        ok = await build_image(image)
+        ok = await build_image(image, no_cache=args.no_cache)
         if not ok:
             return 1
 
@@ -481,6 +483,11 @@ def main(argv: Iterable[str] | None = None) -> int:
         "--build",
         action="store_true",
         help="Build Docker image (docker build -t <image> -f Dockerfile.hud .)",
+    )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Build without Docker cache (forces fresh git clone, dependency install, etc.)",
     )
     parser.add_argument(
         "-p",
