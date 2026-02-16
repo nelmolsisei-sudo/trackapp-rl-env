@@ -23,5 +23,10 @@
     "env": {"name": "trackapp-rl-env"},
     "scenario": "coding:fix-remove-safety",
     "args": {}
+  },
+  {
+    "env": {"name": "trackapp-rl-env"},
+    "scenario": "coding:fix-erc20-vulnerabilities",
+    "args": {}
   }
 ]

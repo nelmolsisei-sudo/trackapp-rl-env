@@ -84,6 +84,19 @@ RUN python3 /build_scripts/alter_env_files.py
 
 USER root
 
+# ========================= FOUNDRY SETUP =========================
+# Solidity toolchain for smart contract tasks (forge, cast, anvil)
+# =================================================================
+ENV FOUNDRY_DIR=/root/.foundry
+RUN curl -L https://foundry.paradigm.xyz | bash && \
+    ${FOUNDRY_DIR}/bin/foundryup
+
+ENV PATH="${FOUNDRY_DIR}/bin:$PATH"
+
+# Pre-install forge-std so smart contract branches don't need git submodules
+RUN mkdir -p /opt/foundry-libs && \
+    git clone --depth 1 https://github.com/foundry-rs/forge-std /opt/foundry-libs/forge-std
+
 
 # ================================ HUD Environment Setup ================================================
 FROM setup AS runtime
@@ -105,7 +118,7 @@ RUN uv venv && . .venv/bin/activate && uv sync --no-install-project --extra dev 
 RUN . .venv/bin/activate && uv pip install setuptools && uv pip install -r /home/ubuntu/${FOLDER_NAME}/requirements.txt
 
 ENV PYTHONPATH=/mcp_server/.venv/lib/python3.12/site-packages:/mcp_server
-ENV PATH=/mcp_server/.venv/bin:$PATH
+ENV PATH=/root/.foundry/bin:/mcp_server/.venv/bin:$PATH
 
 COPY ./env.py /mcp_server/env.py
 COPY ./tools /mcp_server/tools

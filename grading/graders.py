@@ -11,8 +11,9 @@ class AgentPatchGrader(Grader):
     """
     Grader that applies test.patch and runs tests.
 
-    Uses DjangoGradingRunner for Django projects (copies repo into a
-    subdirectory matching the package name for correct import resolution).
+    Defaults to DjangoGradingRunner (copies repo into a subdirectory matching
+    the package name for correct import resolution). Pass runner_class to
+    override -- e.g. GradingRunner for non-Django projects like Foundry.
 
     Usage:
         AgentPatchGrader.grade(
@@ -28,6 +29,15 @@ class AgentPatchGrader(Grader):
             test_files=["tests/test_foo.py"],
             test_command="python manage.py test tests.test_foo --verbosity=2",
         )
+
+    Non-Django runner (e.g. Foundry smart contracts):
+        AgentPatchGrader.grade(
+            weight=1.0,
+            problem_id="smart_contract_erc20",
+            test_files=[],
+            test_command="forge test -vvv",
+            runner_class=GradingRunner,
+        )
     """
 
     name = "AgentPatchGrader"
@@ -40,6 +50,7 @@ class AgentPatchGrader(Grader):
         problem_id: str | None = None,
         test_command: str | None = None,
         validate_mode: ValidateMode | None = None,
+        runner_class: type | None = None,
         **kwargs,
     ) -> tuple[float, dict]:
         """
@@ -49,6 +60,7 @@ class AgentPatchGrader(Grader):
             test_files: Test files to run
             problem_id: Problem ID for patches (default: PROBLEM_ID env)
             test_command: Test command with {test_files} placeholder
+            runner_class: GradingRunner subclass to use (default: DjangoGradingRunner)
 
         Returns:
             (score, metadata) - score is 1.0 if tests pass, 0.0 otherwise
@@ -59,8 +71,8 @@ class AgentPatchGrader(Grader):
 
         cmd = test_command or cls.DEFAULT_TEST_COMMAND
 
-        # Use DjangoGradingRunner for Django manage.py commands
-        runner = DjangoGradingRunner(
+        RunnerClass = runner_class or DjangoGradingRunner
+        runner = RunnerClass(
             problem_id=pid,
             test_command=cmd,
             test_files=test_files,
