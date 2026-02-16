@@ -45,7 +45,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | b
 # =================================================================
 
 # 0) Set up your project repository
-ARG REPO_URL="https://github.com/jackdeterman/trackapp-target"
+ARG REPO_URL="https://github.com/nelmolsisei-sudo/trackapp-target"
 ARG FOLDER_NAME="trackapp"
 
 ENV FOLDER_NAME=${FOLDER_NAME}

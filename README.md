@@ -2,7 +2,7 @@
 
 **A reinforcement learning environment for evaluating AI agents on real-world Django application bug-fixing.**
 
-Built on [HUD](https://hud.ai) infrastructure. Targets [trackapp-target](https://github.com/jackdeterman/trackapp-target).
+Built on [HUD](https://hud.ai) infrastructure. Targets [trackapp-target](https://github.com/nelmolsisei-sudo/trackapp-target).
 
 ---
 
