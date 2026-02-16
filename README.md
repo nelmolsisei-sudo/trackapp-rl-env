@@ -63,7 +63,7 @@ trackapp-rl-env/          # This repo: environment definition
     graders.py            # AgentPatchGrader: applies hidden tests, runs Django test suite
   imagectl4.py            # CLI for build, validate, run, push
 
-trackapp-target/          # Target repo (github.com/jackdeterman/trackapp-target)
+trackapp-target/          # Target repo (github.com/nelmolsisei-sudo/trackapp-target)
   views.py, models.py     # Django application source
   3 branches per task:
     {task}_baseline        # Contains the bug
