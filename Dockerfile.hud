@@ -71,8 +71,10 @@ RUN mkdir -p /home/root/patches && \
     git config --global --add safe.directory /home/ubuntu/${FOLDER_NAME}
 USER ubuntu
 
-# 1) Install Python dependencies
+# 1) Install Python dependencies (as root so they're available system-wide for grading)
+USER root
 RUN cd /home/ubuntu/${FOLDER_NAME} && pip install -r requirements.txt --break-system-packages
+USER ubuntu
 
 # 6) Configure environment files
 COPY build_scripts/ /build_scripts/
@@ -95,6 +97,13 @@ WORKDIR /mcp_server
 
 ENV RUST_LOG=warn
 RUN uv venv && . .venv/bin/activate && uv sync --no-install-project --extra dev && uv pip install -e .
+
+# Also install Django project requirements into the venv so both the
+# grading runner and agent bash sessions (which use this venv's python
+# via PATH) can import Django.
+# setuptools is needed because Django 3.2.x uses distutils (removed in Python 3.12).
+RUN . .venv/bin/activate && uv pip install setuptools && uv pip install -r /home/ubuntu/${FOLDER_NAME}/requirements.txt
+
 ENV PYTHONPATH=/mcp_server/.venv/lib/python3.12/site-packages:/mcp_server
 ENV PATH=/mcp_server/.venv/bin:$PATH
 
