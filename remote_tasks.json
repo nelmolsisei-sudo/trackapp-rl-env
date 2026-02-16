@@ -3,5 +3,25 @@
     "env": {"name": "trackapp-rl-env"},
     "scenario": "coding:fix-result-crud",
     "args": {}
+  },
+  {
+    "env": {"name": "trackapp-rl-env"},
+    "scenario": "coding:fix-profile-404",
+    "args": {}
+  },
+  {
+    "env": {"name": "trackapp-rl-env"},
+    "scenario": "coding:fix-merge-meet-auth",
+    "args": {}
+  },
+  {
+    "env": {"name": "trackapp-rl-env"},
+    "scenario": "coding:fix-register-validation",
+    "args": {}
+  },
+  {
+    "env": {"name": "trackapp-rl-env"},
+    "scenario": "coding:fix-remove-safety",
+    "args": {}
   }
 ]
